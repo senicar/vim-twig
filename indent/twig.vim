@@ -13,23 +13,17 @@ fun! GetTwigIndent()
 	let previousLine = getline(previousLineNumber)
 
 	if (previousLine =~ s:startStructures || previousLine =~ s:middleStructures) && (currentLine !~ s:endStructures && currentLine !~ s:middleStructures)
-		echo "below start or middle"
 		return indent(previousLineNumber) + &shiftwidth
 	elseif currentLine =~ s:endStructures || currentLine =~ s:middleStructures
 		let previousOpenStructureNumber = s:FindPreviousOpenStructure(0, 0, currentLineNumber)
 		let previousOpenStructureLine = getline(previousOpenStructureNumber)
-		echo "finding previous open structure"
 		return indent(previousOpenStructureNumber)
 	endif
-
-	echo "none"
-
 	return HtmlIndent()
 endf
 
 
 function! s:FindPreviousOpenStructure(countOpen, countClosed, lineNumber)
-	echo a:countOpen . a:countClosed . a:lineNumber
 	if a:countOpen > a:countClosed
 		return a:lineNumber
 	elseif a:lineNumber <= 0
