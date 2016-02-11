@@ -1,8 +1,6 @@
-**DISCONTINUED**
-
 Fork from evidens/vim-twig
 
-Added basic indenting support
+Added basic auto-indent support
 
 # vim-twig
 
