@@ -38,10 +38,14 @@ snippet ##
 	{# ${1} #}${2}
 # Open/close block
 snippet %end
-	{% ${1:block} %}${2}{% end$1 %}
+	{% ${1:block} %}
+		${2}
+	{% end$1 %}
 # Named block
 snippet block
-	{% block ${1:name} %}${2}{% endblock %}
+	{% block ${1:name} %}
+		${2}
+	{% endblock %}
 snippet f_date
 	{{ ${1:a_date}|date("${2:m/d/Y}") }}
 

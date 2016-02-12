@@ -1,21 +1,20 @@
-if exists("b:ran_once")
-	finish
-endif
+"if exists("b:ran_once")
+"	finish
+"endif
+"
+"let b:ran_once = 1
 
-let b:ran_once = 1
+setlocal indentexpr=GetTwigIndent(v:lnum)
 
-setlocal indentexpr=GetTwigIndent()
-
-fun! GetTwigIndent()
-	let currentLineNumber = v:lnum
-	let currentLine = getline(currentLineNumber)
-	let previousLineNumber = prevnonblank(currentLineNumber - 1)
+fun! GetTwigIndent(currentLineNumber)
+	let currentLine = getline(a:currentLineNumber)
+	let previousLineNumber = prevnonblank(a:currentLineNumber - 1)
 	let previousLine = getline(previousLineNumber)
 
 	if (previousLine =~ s:startStructures || previousLine =~ s:middleStructures) && (currentLine !~ s:endStructures && currentLine !~ s:middleStructures)
 		return indent(previousLineNumber) + &shiftwidth
 	elseif currentLine =~ s:endStructures || currentLine =~ s:middleStructures
-		let previousOpenStructureNumber = s:FindPreviousOpenStructure(0, 0, currentLineNumber)
+		let previousOpenStructureNumber = s:FindPreviousOpenStructure(a:currentLineNumber)
 		let previousOpenStructureLine = getline(previousOpenStructureNumber)
 		return indent(previousOpenStructureNumber)
 	endif
@@ -23,23 +22,22 @@ fun! GetTwigIndent()
 endf
 
 
-function! s:FindPreviousOpenStructure(countOpen, countClosed, lineNumber)
-	if a:countOpen > a:countClosed
-		return a:lineNumber
-	elseif a:lineNumber <= 0
-		return 0
-	endif
+function! s:FindPreviousOpenStructure(lineNumber)
+	let countOpen = 0
+	let countClosed = 0
+	let lineNumber = a:lineNumber
+	while lineNumber != 1 && countOpen <= countClosed
+		let lineNumber -= 1
+		let currentLine = getline(lineNumber)
 
-	let currentLineNumber = a:lineNumber - 1
-	let currentLine = getline(currentLineNumber)
-	if currentLine =~ s:startStructures
-		return s:FindPreviousOpenStructure(a:countOpen + 1, a:countClosed, currentLineNumber)
-	elseif currentLine =~ s:endStructures
-		return s:FindPreviousOpenStructure(a:countOpen, a:countClosed + 1, currentLineNumber)
-	else
-		return s:FindPreviousOpenStructure(a:countOpen, a:countClosed, currentLineNumber)
-	endif
+		if currentLine =~ s:startStructures
+			let countOpen += 1
+		elseif currentLine =~ s:endStructures
+			let countClosed += 1
+		endif
+	endwhile
 
+	return lineNumber
 endfunction
 
 function! s:StartStructure(name)
