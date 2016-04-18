@@ -1,9 +1,10 @@
-"if exists("b:ran_once")
-"	finish
-"endif
-"
-"let b:ran_once = 1
+if exists("b:ran_once")
+	finish
+endif
 
+let b:ran_once = 1
+
+let s:baseIndentExpr=&indentexpr
 setlocal indentexpr=GetTwigIndent(v:lnum)
 
 fun! GetTwigIndent(currentLineNumber)
@@ -18,7 +19,15 @@ fun! GetTwigIndent(currentLineNumber)
 		let previousOpenStructureLine = getline(previousOpenStructureNumber)
 		return indent(previousOpenStructureNumber)
 	endif
-	return HtmlIndent()
+
+    return s:CallBaseIndent()
+endf
+
+function! s:CallBaseIndent()
+    exe 'redir => s:outputOfBaseIndent'
+    exe 'silent echo ' . s:baseIndentExpr
+    exe 'redir END'
+    return split(s:outputOfBaseIndent)[0]
 endf
 
 
