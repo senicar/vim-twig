@@ -1,9 +1,6 @@
-**DISCONTINUED**
+Fork from evidens/vim-twig
 
-I haven't used Vim or Twig in a long time and so haven't made time to keep this up-to-date.
-
-If you would like to maintain this repo, I'll happily re-direct people to your fork.
-
+Added basic auto-indent support
 
 # vim-twig
 
@@ -25,6 +22,9 @@ $ git clone <repo>
 ```
 
 ## Changes
+### 2016-02-11
+- Added basic support for auto-indent
+
 ### 2014-03-04
 - Also supports html syntax highlighting
 
